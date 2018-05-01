@@ -286,20 +286,18 @@
 						setrawcookie('gltexp_' . $api_key, rawurlencode($session_sig), time() + (10 * 365 * 24 * 60 * 60), '/', $request->getHost());
 					}
 				}
+				else
+					user_logout();
 			}
 			return new AjaxResponse();
 		}
 
 		private function shouldAddExtCookie($request, $login) {
-			if ("dynamic" != \Drupal::config('gigya_raas.settings')->get('gigya_raas.session_type'))
-			{
+			if (\Drupal::config('gigya_raas.settings')->get('gigya_raas.session_type') !== 'dynamic')
 				return false;
-			}
 
 			if ($login)
-			{
 				return true;
-			}
 
 			$current_user = \Drupal::currentUser();
 			if ($current_user->isAuthenticated() && !$current_user->hasPermission('bypass gigya raas'))
