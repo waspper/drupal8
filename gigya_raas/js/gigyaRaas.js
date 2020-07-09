@@ -112,10 +112,17 @@
 			"remember": remember
 		};
 
-		var ajaxSettings = {
-			url: drupalSettings.path.baseUrl + 'gigya/raas-login',
-			submit: data
-		};
+        var url = drupalSettings.path.baseUrl + 'gigya/raas-login';
+        if (typeof drupalSettings.gigyaExtra != 'undefined' && typeof drupalSettings.gigyaExtra.loginRedirectMode != 'undefined' && drupalSettings.gigyaExtra.loginRedirectMode == 'current') {
+          url += '?destination=/' + drupalSettings.path.currentPath;
+          if (typeof drupalSettings.path.currentQuery == 'object') {
+            url += encodeURIComponent('?' + $.param(drupalSettings.path.currentQuery));
+          }
+        }
+        var ajaxSettings = {
+            url: url,
+            submit: data
+        };
 
 		var myAjaxObject = Drupal.ajax(ajaxSettings);
 		myAjaxObject.execute();
